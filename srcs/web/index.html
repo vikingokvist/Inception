@@ -1,40 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>YO WASSUP</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CTOMMASI.42.FR</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      padding: 40px;
-      background-color: #f4f4f4;
-      color: #ffffff;
+      margin: 0;
+      background-color: #000;
+      color: #eee;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
-    .container {
-      background: rgb(52, 40, 40);
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-      max-width: 500px;
-      margin: auto;
+
+    .header {
+      height: 25vh;
+      background-color: white;
+      color: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3em;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-transform: uppercase;
     }
-    h1 {
+
+    .content {
+      flex: 1;
+      padding: 40px 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      font-size: 1.1em;
+      line-height: 1.6;
+    }
+
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 40px 0;
+    }
+
+    .button-group a {
+      background-color: white;
+      color: black;
+      text-decoration: none;
+      padding: 18px 36px;
+      font-size: 1.2em;
+      font-weight: bold;
+      border: none;
+      width: 260px;
       text-align: center;
-      color: #d71c1c;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .button-group a:hover {
+      background-color: #ddd;
+      transition: background-color 0.3s ease;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>yo what's up</h1>
-    <p><strong>Quote of the Day:</strong> "The only way to do great work is to love what you do." – Steve Jobs</p>
-    <p><strong>Today's Date:</strong> <span id="date"></span></p>
-    <p><strong>Fun Fact:</strong> Honey never spoils. Archaeologists have found pots of honey in ancient tombs that are over 3,000 years old and still perfectly edible.</p>
+
+  <div class="header">CTOMMASI.42.FR</div>
+
+  <div class="content">
+    <p><strong>Inception</strong> is a concept that plays with the nature of ideas—how they are planted, how they grow, and how they influence behavior. In the 2010 film "Inception", it explores this through layers of dream worlds, where time dilates and reality bends.</p>
+    <p>This site is an experiment in minimalist design—simple shapes, bold contrast, and functional clarity—Scandinavian in spirit, elegant in execution.</p>
   </div>
 
-  <script>
-    // Set current date
-    document.getElementById('date').textContent = new Date().toLocaleDateString();
-  </script>
+  <div class="button-group">
+    <a href="index.php">Enter PHP Site</a>
+    <a href="https://en.wikipedia.org/wiki/Inception">Inception Wikipedia</a>
+  </div>
+
 </body>
 </html>

@@ -1,8 +1,10 @@
 FROM alpine:3.19
 
 
-RUN apk update && apk upgrade && \
-    apk add --no-cache nginx openssl ca-certificates \
+RUN apk update && apk upgrade && apk add --no-cache \
+    nginx \
+    openssl \
+    ca-certificates \
     && update-ca-certificates
 
 

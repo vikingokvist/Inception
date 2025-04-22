@@ -18,3 +18,5 @@ clean:
 
 fclean:
 	cd srcs && docker-compose down -v --rmi all
+
+re: fclean all
