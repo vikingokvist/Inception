@@ -10,6 +10,4 @@ RUN mkdir -p /etc/ssl/certs /etc/ssl/private && \
 
 COPY default.conf /etc/nginx/conf.d/default.conf
 
-COPY default /etc/nginx/sites-available/.
-
 CMD ["nginx", "-g", "daemon off;"]
