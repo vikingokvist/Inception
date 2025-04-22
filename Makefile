@@ -11,7 +11,10 @@
 # **************************************************************************** #
 
 all:
-	cd srcs && docker compose up -d --build
+	cd srcs && docker-compose up -d --build --remove-orphans
 
 clean:
-	cd srcs && docker compose down
+	cd srcs && docker-compose down
+
+fclean:
+	cd srcs && docker-compose down -v --rmi all

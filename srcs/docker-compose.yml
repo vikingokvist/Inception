@@ -4,7 +4,7 @@ services:
     build: ./requirements/nginx/.
     container_name: nginx
     ports:
-      - "4433:443"
+      - "443:443"
     depends_on:
       - wordpress
     volumes:
