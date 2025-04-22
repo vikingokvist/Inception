@@ -8,6 +8,6 @@ RUN mkdir -p /etc/ssl/certs /etc/ssl/private && \
     -out /etc/ssl/certs/nginx-selfsigned.crt \
     -subj "/CN=localhost"
 
-COPY default.conf /etc/nginx/conf.d/default.conf
+COPY default /etc/nginx/conf.d/default.conf
 
 CMD ["nginx", "-g", "daemon off;"]
