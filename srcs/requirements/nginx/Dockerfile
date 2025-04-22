@@ -1,6 +1,13 @@
-FROM debian:bookworm
+FROM alpine:3.19
 
-RUN apt update && apt upgrade -y && apt install -y nginx openssl
+
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/v3.19/community" >> /etc/apk/repositories
+
+
+RUN apk update && apk upgrade && \
+    apk add --no-cache nginx openssl ca-certificates \
+    && update-ca-certificates
+
 
 RUN mkdir -p /etc/ssl/certs /etc/ssl/private && \
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
@@ -8,6 +15,7 @@ RUN mkdir -p /etc/ssl/certs /etc/ssl/private && \
     -out /etc/ssl/certs/nginx-selfsigned.crt \
     -subj "/CN=localhost"
 
-COPY default /etc/nginx/conf.d/default.conf
+
+COPY default.conf /etc/nginx/default.conf
 
 CMD ["nginx", "-g", "daemon off;"]

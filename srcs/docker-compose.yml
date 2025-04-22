@@ -1,37 +1,27 @@
-
 services:
 
   nginx:
-
     build: ./requirements/nginx/.
-
     container_name: nginx
-
     ports:
       - "4433:443"
-
     depends_on:
       - wordpress
-    
     volumes:
       - ./web:/var/www/html
-
-
-    # restart: always
+    networks:
+      - mynetwork
 
   wordpress:
-
     build: ./requirements/wordpress/.
-
     container_name: wp-php
-
     volumes:
       - ./web:/var/www/html
-
     expose:
       - "9000"
+    networks:
+      - mynetwork
 
-
-    # restart: always
-
-#hello this should 
+networks:
+  mynetwork:
+    driver: bridge
