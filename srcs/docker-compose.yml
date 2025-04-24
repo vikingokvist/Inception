@@ -1,27 +1,74 @@
+
+#-----------------------------------------SERVICES
 services:
+#------------------------------------nginx
 
   nginx:
-    build: ./requirements/nginx/.
+
     container_name: nginx
-    ports:
-      - "443:443"
+    build: ./requirements/nginx/.
     depends_on:
       - wordpress
     volumes:
       - ./web:/var/www/html
+    ports:
+      - "443:443"
     networks:
       - mynetwork
+    restart: on-failure
+
+#------------------------------------wordpress
 
   wordpress:
-    build: ./requirements/wordpress/.
+
     container_name: wp-php
+    build: ./requirements/wordpress/.
+    depends_on:
+      - mariadb
     volumes:
       - ./web:/var/www/html
     expose:
       - "9000"
     networks:
       - mynetwork
+    environment:
+      WORDPRESS_DB_HOST: ${MYSQL_HOST}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+    restart: on-failure
+
+#------------------------------------mariadb
+
+  mariadb:
+
+    container_name: mariadb
+    build: ./requirements/mariadb/.
+    volumes:
+      - ./mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - mynetwork
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+      timeout: 10s
+    restart: on-failure
+    #restart: on-failure
+    
+
+#----------------------------------------------
 
 networks:
   mynetwork:
     driver: bridge
+
+#-----------------------------------------------
