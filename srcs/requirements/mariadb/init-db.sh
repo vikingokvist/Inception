@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 until mysqladmin ping --silent; do
@@ -7,6 +6,7 @@ until mysqladmin ping --silent; do
 done
 
 echo "MariaDB started."
+
 
 cat << EOF | mysql -u root
 CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};

@@ -1,5 +1,3 @@
-
-
 FROM alpine:3.19
 
 RUN apk update && apk upgrade && apk add \
@@ -19,16 +17,11 @@ RUN apk update && apk upgrade && apk add \
     bash \
     && rm -rf /var/cache/apk/*
 
-
-
 COPY www.conf /etc/php82/php-fpm.d/
 
 WORKDIR /var/www/html
 
-RUN wget https://wordpress.org/latest.tar.gz && \
-    tar -xzf latest.tar.gz && \
-    cp -r wordpress/* . && \
-    rm -rf wordpress latest.tar.gz
+COPY setup-wp.sh /setup-wp.sh
+RUN chmod +x /setup-wp.sh
 
-
-CMD ["php-fpm82", "-F"]
+CMD ["/bin/bash", "-c", "/setup-wp.sh && php-fpm82 -F"]

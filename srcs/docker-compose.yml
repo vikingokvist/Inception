@@ -1,32 +1,29 @@
-
-#-----------------------------------------SERVICES
+#--------------------------------------------------------------
 services:
-#------------------------------------nginx
+#--------------------------------------------------------------
 
   nginx:
-
     container_name: nginx
     build: ./requirements/nginx/.
     depends_on:
       - wordpress
     volumes:
-      - ./web:/var/www/html
+      - wp_data:/var/www/html
     ports:
       - "443:443"
     networks:
       - mynetwork
     restart: on-failure
 
-#------------------------------------wordpress
+#--------------------------------------------------------------
 
   wordpress:
-
     container_name: wp-php
     build: ./requirements/wordpress/.
     depends_on:
       - mariadb
     volumes:
-      - ./web:/var/www/html
+      - wp_data:/var/www/html
     expose:
       - "9000"
     networks:
@@ -38,14 +35,13 @@ services:
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
     restart: on-failure
 
-#------------------------------------mariadb
+#--------------------------------------------------------------
 
   mariadb:
-
     container_name: mariadb
     build: ./requirements/mariadb/.
     volumes:
-      - ./mariadb_data:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
     ports:
       - "3306:3306"
     networks:
@@ -62,13 +58,13 @@ services:
       start_period: 30s
       timeout: 10s
     restart: on-failure
-    #restart: on-failure
-    
 
-#----------------------------------------------
+#--------------------------------------------------------------
 
 networks:
   mynetwork:
     driver: bridge
 
-#-----------------------------------------------
+volumes:
+  wp_data:
+  mariadb_data:
