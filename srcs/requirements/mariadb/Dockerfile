@@ -1,24 +1,17 @@
-
-FROM alpine:3.19
-
-
-RUN apk update && apk upgrade && apk add --no-cache \
-    mariadb mariadb-client bash && \
-    rm -rf /var/cache/apk/*
+FROM alpine:3.20
 
 
-RUN mkdir -p /run/mysqld && \
-    chown -R mysql:mysql /run/mysqld
+RUN apk add --no-cache mariadb mariadb-client
 
+RUN mkdir -p /var/lib/mysql /run/mysqld /var/log/mysql && \
+    chown -R mysql:mysql /var/lib/mysql /run/mysqld /var/log/mysql && \
+    chmod 755 /var/lib/mysql /run/mysqld /var/log/mysql
 
-COPY ./init-db.sh /init-db.sh
-RUN chmod +x /init-db.sh
+COPY ./my.cnf /etc/my.cnf.d/mariadb-server.cnf
+COPY ./entrypoint.sh /usr/local/bin/
 
-
-RUN mysql_install_db --user=mysql --datadir=/var/lib/mysql
-
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 3306
 
-
-CMD ["/bin/bash", "-c", "mysqld_safe --datadir=/var/lib/mysql & sleep 5 && /init-db.sh && tail -f /dev/null"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

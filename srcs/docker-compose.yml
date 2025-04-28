@@ -1,70 +1,74 @@
-#--------------------------------------------------------------
+---
 services:
-#--------------------------------------------------------------
-
-  nginx:
-    container_name: nginx
-    build: ./requirements/nginx/.
-    depends_on:
-      - wordpress
+  mariadb:
+    image: mariadb
+    container_name: mariadb
+    restart: always
+    build:
+      context: ./requirements/mariadb
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_USER: ${MYSQL_ROOT_USER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
-      - wp_data:/var/www/html
-    ports:
-      - "443:443"
+      - db:/var/lib/mysql
     networks:
-      - mynetwork
-    restart: on-failure
-
-#--------------------------------------------------------------
+      - inception
 
   wordpress:
-    container_name: wp-php
-    build: ./requirements/wordpress/.
+    container_name: wordpress
+    build:
+      context: ./requirements/wordpress
     depends_on:
       - mariadb
-    volumes:
-      - wp_data:/var/www/html
-    expose:
-      - "9000"
-    networks:
-      - mynetwork
     environment:
-      WORDPRESS_DB_HOST: ${MYSQL_HOST}
-      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
-      WORDPRESS_DB_USER: ${MYSQL_USER}
-      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
-    restart: on-failure
-
-#--------------------------------------------------------------
-
-  mariadb:
-    container_name: mariadb
-    build: ./requirements/mariadb/.
+      WP_TITLE: "My WordPress Site"
+      WP_ADMIN_USER: "admin"
+      WP_ADMIN_PASSWORD: "admin_password"   # Corrected password to match your environment variables
+      WP_ADMIN_EMAIL: "admin@example.com"
+      WP_USER: "editor"
+      WP_EMAIL: "editor@example.com"
+      WP_PASSWORD: "editor_password"   # Corrected password to match your environment variables
+      WP_DATABASE: "wordpress_db"   # Corrected database name
+      WP_URL: "https://ctommasi.42.fr"
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - wp-files:/var/www/wordpress
+    networks:
+      - inception
+
+  nginx:
+    image: nginx
+    container_name: nginx 
+    restart: always
+    build:
+      context: ./requirements/nginx
+    depends_on:
+      - wordpress
     ports:
-      - "3306:3306"
+      - 443:443
+    volumes:
+      - wp-files:/var/www/wordpress
     networks:
-      - mynetwork
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      retries: 5
-      start_period: 30s
-      timeout: 10s
-    restart: on-failure
-
-#--------------------------------------------------------------
+      - inception
+      
 
 networks:
-  mynetwork:
+  inception:
+    name: inception
     driver: bridge
 
 volumes:
-  wp_data:
-  mariadb_data:
+  db:
+    name: "db"
+    driver: local
+    driver_opts: 
+      type: none
+      o: bind
+      device: /home/ctommasi/data/db
+  wp-files:
+    name: "wp-files"
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/ctommasi/data/wp-files

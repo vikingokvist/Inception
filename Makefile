@@ -11,12 +11,15 @@
 # **************************************************************************** #
 
 all:
-	cd srcs && docker-compose up -d --build --remove-orphans
+	cd srcs && \
+	mkdir -p /home/ctommasi/data/db /home/ctommasi/data/wp-files && \
+	docker-compose up --build
 
 clean:
 	cd srcs && docker-compose down
 
 fclean:
+	rm -rf /home/ctommasi/data/db /home/ctommasi/data/wp-files && \
 	cd srcs && docker-compose down -v --rmi all
 
 ps:

@@ -1,27 +1,25 @@
-FROM alpine:3.19
+FROM alpine:3.20
 
-RUN apk update && apk upgrade && apk add \
-    php82 \
-    php82-fpm \
-    php82-mysqli \
-    php82-opcache \
-    php82-json \
-    php82-mbstring \
-    php82-curl \
-    php82-xml \
-    php82-zip \
-    php82-session \
-    php82-fileinfo \
-    wget \
-    tar \
-    bash \
-    && rm -rf /var/cache/apk/*
+RUN apk add --no-cache \
+  php php-common php-fpm \
+  php-mysqli php-json php-session php-zlib php-gd \
+  php-mbstring php-openssl php-curl php-dom wget tar \
+  mariadb-client curl \
+  php-phar php-simplexml php-xmlwriter php-tokenizer php-zip
 
-COPY www.conf /etc/php82/php-fpm.d/
+RUN echo 'memory_limit = 256M' >> /etc/php83/php.ini
 
-WORKDIR /var/www/html
+RUN curl -L https://github.com/wp-cli/wp-cli/releases/download/v2.7.1/wp-cli-2.7.1.phar \
+  -o /usr/local/bin/wp \
+ && chmod +x /usr/local/bin/wp
 
-COPY setup-wp.sh /setup-wp.sh
-RUN chmod +x /setup-wp.sh
+# Create a directory for Worpress and download Wordpress
+COPY ./entrypoint.sh /usr/local/bin/
 
-CMD ["/bin/bash", "-c", "/setup-wp.sh && php-fpm82 -F"]
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+EXPOSE 9000
+
+CMD ["php-fpm83", "-F", "--nodaemonize"]
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
