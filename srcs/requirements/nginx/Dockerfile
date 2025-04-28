@@ -12,7 +12,7 @@ RUN mkdir -p /etc/ssl/certs /etc/ssl/private && \
     -out /etc/ssl/certs/nginx-selfsigned.crt \
     -subj "/CN=ctommasi.42.fr"
 
-COPY default.conf /etc/nginx/http.d/default.conf
+COPY ./conf/default.conf /etc/nginx/http.d/default.conf
 
 EXPOSE 443
 
