@@ -1,8 +1,8 @@
 services:
+
   nginx:
     image: nginx
     container_name: nginx 
-    restart: always
     build:
       context: ./requirements/nginx
     depends_on:
@@ -11,13 +11,15 @@ services:
       - 443:443
     volumes:
       - wp-files:/var/www/wordpress
+      - certs:/etc/ssl
+
     networks:
       - inception
+    restart: always
 
   mariadb:
     image: mariadb
     container_name: mariadb
-    restart: always
     build:
       context: ./requirements/mariadb
     volumes:
@@ -28,6 +30,7 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_ROOT_USER: ${MYSQL_ROOT_USER}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    restart: always
 
   wordpress:
     container_name: wordpress
@@ -49,6 +52,31 @@ services:
       WP_PASSWORD: ${WP_PASSWORD}
       WP_DATABASE: ${WP_DATABASE}
       WP_URL: ${WP_URL}
+    restart: always
+  
+  redis:
+    container_name: redis
+    build:
+      context: ./requirements/bonus/redis
+    networks:
+      - inception
+    restart: always
+  
+  ftp:
+    container_name: ftp
+    build:
+      context: ./requirements/bonus/FTP
+    depends_on:
+      - nginx
+    ports:
+      - "21:21"
+      - "30000-30010:30000-30010"
+    volumes:
+      - wp-files:/var/www/wordpress
+      - certs:/etc/ssl
+    networks:
+      - inception
+    restart: always
 
 networks:
   inception:
@@ -70,3 +98,9 @@ volumes:
       type: none
       o: bind
       device: /home/ctommasi/data/wp-files
+  certs:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/ctommasi/data/certs

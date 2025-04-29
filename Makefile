@@ -11,15 +11,20 @@
 # **************************************************************************** #
 
 all:
-	mkdir -p /home/ctommasi/data/db /home/ctommasi/data/wp-files \
+	mkdir -p /home/ctommasi/data/db /home/ctommasi/data/wp-files /home/ctommasi/data/certs \
 	&& cd srcs && docker-compose up -d --build
+
+attached:
+	mkdir -p /home/ctommasi/data/db /home/ctommasi/data/wp-files /home/ctommasi/data/certs \
+	&& cd srcs && docker-compose up --build
 
 clean:
 	cd srcs && docker-compose down
 
 fclean:
-	rm -rf /home/ctommasi/data/db /home/ctommasi/data/wp-files \
+	rm -rf /home/ctommasi/data/db /home/ctommasi/data/wp-files /home/ctommasi/data/certs \
 	&& cd srcs && docker-compose down -v --rmi all
 
 re: fclean all
 
+.PHONY: all clean fclean re attached
