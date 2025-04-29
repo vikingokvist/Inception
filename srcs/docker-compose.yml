@@ -66,16 +66,20 @@ services:
     container_name: ftp
     build:
       context: ./requirements/bonus/FTP
+      args:
+        FTP_USER: ${FTP_USER}
+        FTP_PASSWORD: ${FTP_PASSWORD} 
     depends_on:
-      - nginx
+      - wordpress
     ports:
       - "21:21"
-      - "30000-30010:30000-30010"
     volumes:
       - wp-files:/var/www/wordpress
-      - certs:/etc/ssl
     networks:
       - inception
+    environment:
+      FTP_USER: ${FTP_USER}
+      FTP_PASSWORD: ${FTP_PASSWORD}
     restart: always
 
 networks:
