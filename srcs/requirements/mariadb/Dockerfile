@@ -1,6 +1,7 @@
 FROM alpine:3.20
 
-RUN apk add --no-cache mariadb mariadb-client
+RUN apk add --no-cache \
+    mariadb mariadb-client
 
 RUN mkdir -p /var/lib/mysql /run/mysqld /var/log/mysql && \
     chown -R mysql:mysql /var/lib/mysql /run/mysqld /var/log/mysql && \

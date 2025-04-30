@@ -52,12 +52,17 @@ services:
       WP_PASSWORD: ${WP_PASSWORD}
       WP_DATABASE: ${WP_DATABASE}
       WP_URL: ${WP_URL}
+      WP_REDIS_HOST: ${WP_REDIS_HOST}
+      WP_REDIS_PORT: ${WP_REDIS_PORT}
+      WP_REDIS_SCHEME: ${WP_REDIS_SCHEME}
     restart: always
   
   redis:
     container_name: redis
     build:
       context: ./requirements/bonus/redis
+    ports:
+      - 6379:6379
     networks:
       - inception
     restart: always

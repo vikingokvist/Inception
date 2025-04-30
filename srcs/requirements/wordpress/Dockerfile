@@ -13,9 +13,7 @@ RUN echo 'memory_limit = 256M' >> /etc/php83/php.ini
 RUN curl -L https://github.com/wp-cli/wp-cli/releases/download/v2.7.1/wp-cli-2.7.1.phar \
 	-o /usr/local/bin/wp && chmod +x /usr/local/bin/wp
 
-
 COPY ./tools/entrypoint.sh /usr/local/bin/
-
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 9000

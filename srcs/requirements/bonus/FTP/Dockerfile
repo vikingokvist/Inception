@@ -3,8 +3,7 @@ FROM alpine:3.20
 
 RUN apk add --no-cache \
     vsftpd \
-    lftp \
-    openssl
+    lftp
 
 
 ARG FTP_USER
