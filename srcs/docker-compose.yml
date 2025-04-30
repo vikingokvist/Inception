@@ -87,6 +87,19 @@ services:
       FTP_PASSWORD: ${FTP_PASSWORD}
     restart: always
 
+  static_website:
+    container_name: static_website
+    build:
+      context: ./requirements/bonus/static_website
+    ports:
+      - 80:80
+    volumes:
+      - certs:/etc/ssl
+      - html-files:/var/www/static_website
+    networks:
+      - inception
+    restart: always
+
 networks:
   inception:
     name: inception
@@ -107,6 +120,12 @@ volumes:
       type: none
       o: bind
       device: /home/ctommasi/data/wp-files
+  static_website:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/ctommasi/data/html-files
   certs:
     driver: local
     driver_opts:
