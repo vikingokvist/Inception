@@ -1,6 +1,9 @@
 FROM alpine:3.20
 
-COPY ./conf/static-site /usr/share/nginx/html
+RUN mkdir -p /tmp/static_files
 
-EXPOSE 80
 
+COPY ./index/ /tmp/static_files/
+
+
+CMD cp -r /tmp/static_files/* /var/www/static_website/

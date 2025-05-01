@@ -11,8 +11,8 @@ services:
       - 443:443
     volumes:
       - wp-files:/var/www/wordpress
-      - certs:/etc/ssl
-
+      - certs:/etc/nginx/certs
+      - html-files:/var/www/static_website
     networks:
       - inception
     restart: always
@@ -91,10 +91,8 @@ services:
     container_name: static_website
     build:
       context: ./requirements/bonus/static_website
-    ports:
-      - 80:80
     volumes:
-      - certs:/etc/ssl
+      - certs:/etc/nginx/certs
       - html-files:/var/www/static_website
     networks:
       - inception
@@ -120,7 +118,7 @@ volumes:
       type: none
       o: bind
       device: /home/ctommasi/data/wp-files
-  static_website:
+  html-files:
     driver: local
     driver_opts:
       type: none

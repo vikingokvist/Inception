@@ -6,11 +6,12 @@ RUN apk update && apk upgrade && apk add --no-cache \
     ca-certificates \
     && update-ca-certificates
 
-RUN mkdir -p /etc/ssl/certs /etc/ssl/private && \
+RUN mkdir -p /etc/nginx/certs && \
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -keyout /etc/ssl/private/nginx-selfsigned.key \
-    -out /etc/ssl/certs/nginx-selfsigned.crt \
+    -keyout /etc/nginx/certs/nginx-selfsigned.key \
+    -out /etc/nginx/certs/nginx-selfsigned.crt \
     -subj "/CN=ctommasi.42.fr"
+
 
 COPY ./conf/default.conf /etc/nginx/http.d/default.conf
 

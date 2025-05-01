@@ -11,18 +11,32 @@
 # **************************************************************************** #
 
 all:
-	mkdir -p /home/ctommasi/data/db /home/ctommasi/data/wp-files /home/ctommasi/data/certs \
+	mkdir -p \
+	/home/ctommasi/data/db \
+	/home/ctommasi/data/wp-files \
+	/home/ctommasi/data/certs \
+	/home/ctommasi/data/html-files \
+	&& echo "127.0.0.1 ctommasi.42.fr static.ctommasi.42.fr" | tee -a /etc/hosts > /dev/null \
 	&& cd srcs && docker-compose up -d --build
 
 attached:
-	mkdir -p /home/ctommasi/data/db /home/ctommasi/data/wp-files /home/ctommasi/data/certs \
+	mkdir -p \
+	/home/ctommasi/data/db \
+	/home/ctommasi/data/wp-files \
+	/home/ctommasi/data/certs \
+	/home/ctommasi/data/html-files \
+	&& echo "127.0.0.1 ctommasi.42.fr static.ctommasi.42.fr" | tee -a /etc/hosts > /dev/null \
 	&& cd srcs && docker-compose up --build
 
 clean:
 	cd srcs && docker-compose down
 
 fclean:
-	rm -rf /home/ctommasi/data/db /home/ctommasi/data/wp-files /home/ctommasi/data/certs \
+	rm -rf \
+	/home/ctommasi/data/db \
+	/home/ctommasi/data/wp-files \
+	/home/ctommasi/data/certs \
+	/home/ctommasi/data/html-files \
 	&& cd srcs && docker-compose down -v --rmi all
 
 re: fclean all
