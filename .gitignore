@@ -1,2 +1,5 @@
 .env
 /certs
+/wp-files
+/db
+/html-files

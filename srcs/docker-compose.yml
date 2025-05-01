@@ -1,7 +1,6 @@
 services:
 
   nginx:
-    image: nginx
     container_name: nginx 
     build:
       context: ./requirements/nginx
@@ -15,21 +14,6 @@ services:
       - html-files:/var/www/static_website
     networks:
       - inception
-    restart: always
-
-  mariadb:
-    image: mariadb
-    container_name: mariadb
-    build:
-      context: ./requirements/mariadb
-    volumes:
-      - db:/var/lib/mysql
-    networks:
-      - inception
-    environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_ROOT_USER: ${MYSQL_ROOT_USER}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     restart: always
 
   wordpress:
@@ -57,6 +41,20 @@ services:
       WP_REDIS_SCHEME: ${WP_REDIS_SCHEME}
     restart: always
   
+  mariadb:
+    container_name: mariadb
+    build:
+      context: ./requirements/mariadb
+    volumes:
+      - db:/var/lib/mysql
+    networks:
+      - inception
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_USER: ${MYSQL_ROOT_USER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    restart: always
+
   redis:
     container_name: redis
     build:
@@ -91,9 +89,23 @@ services:
     container_name: static_website
     build:
       context: ./requirements/bonus/static_website
+    depends_on:
+      - nginx
     volumes:
       - certs:/etc/nginx/certs
       - html-files:/var/www/static_website
+    networks:
+      - inception
+    restart: no
+  
+  adminer:
+    container_name: adminer
+    build:
+      context: ./requirements/bonus/adminer
+    depends_on:
+      - mariadb
+    ports:
+      - 8080:8080
     networks:
       - inception
     restart: always
@@ -104,6 +116,7 @@ networks:
     driver: bridge
 
 volumes:
+
   db:
     name: "db"
     driver: local
@@ -111,6 +124,7 @@ volumes:
       type: none
       o: bind
       device: /home/ctommasi/data/db
+
   wp-files:
     name: "wp-files"
     driver: local
@@ -118,13 +132,17 @@ volumes:
       type: none
       o: bind
       device: /home/ctommasi/data/wp-files
+
   html-files:
+    name: "html-files"
     driver: local
     driver_opts:
       type: none
       o: bind
       device: /home/ctommasi/data/html-files
+      
   certs:
+    name: "certs"
     driver: local
     driver_opts:
       type: none
