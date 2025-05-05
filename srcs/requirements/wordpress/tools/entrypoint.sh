@@ -38,6 +38,9 @@ if [ ! -f /var/www/wordpress/wp-config.php ]; then
 	cd /var/www/wordpress
 	wp user create $WP_USER $WP_EMAIL --role='editor' --user_pass=$WP_PASSWORD --allow-root
 
+	wp theme install storefront --allow-root
+	wp theme activate storefront --allow-root
+
 	echo "Configuring Redis..."
 	wp config set WP_REDIS_HOST "$WP_REDIS_HOST" --allow-root
 	wp config set WP_REDIS_PORT "$WP_REDIS_PORT" --allow-root
@@ -51,6 +54,26 @@ if [ ! -f /var/www/wordpress/wp-config.php ]; then
 
 	echo "Redis Configuration Succesfull!!!"
 	wp redis enable --allow-root
+
+	echo "Adding Search widget to sidebar..."
+	wp widget add search sidebar-1 2 --allow-root || echo "Failed to add widget, may already exist or sidebar not found"
+
+
+	echo "Installing ElasticPress plugin..."
+	wp plugin install elasticpress --activate --allow-root
+
+	echo "Waiting for Elasticsearch..."
+	while ! nc -z elasticsearch 9200; do
+	    sleep 2
+	done
+
+	echo "Setting ep_host option..."
+	wp option update ep_host http://elasticsearch:9200 --allow-root
+	echo "Indexing WordPress content with ElasticPress..."
+	wp elasticpress index --allow-root
+	echo "Activating ElasticPress features..."
+	wp elasticpress activate-feature autosuggest --allow-root
+	wp elasticpress activate-feature search --allow-root
 
 
 else

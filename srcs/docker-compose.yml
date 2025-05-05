@@ -22,6 +22,7 @@ services:
       context: ./requirements/wordpress
     depends_on:
       - mariadb
+      - elasticsearch
     volumes:
       - wp-files:/var/www/wordpress
     networks:
@@ -39,6 +40,7 @@ services:
       WP_REDIS_HOST: ${WP_REDIS_HOST}
       WP_REDIS_PORT: ${WP_REDIS_PORT}
       WP_REDIS_SCHEME: ${WP_REDIS_SCHEME}
+      WP_ELASTICSEARCH_HOST: ${WP_ELASTICSEARCH_HOST}
     restart: always
   
   mariadb:
@@ -109,6 +111,22 @@ services:
     networks:
       - inception
     restart: always
+
+  elasticsearch:
+    container_name: elasticsearch
+    build:
+      context: ./requirements/bonus/elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - xpack.security.http.ssl.enabled=false
+    ports:
+      - 9200:9200
+    networks:
+      - inception
+    restart: always
+
 
 networks:
   inception:
