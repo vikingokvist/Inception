@@ -1,4 +1,5 @@
 services:
+#----------------------------------------------------------
 
   nginx:
     container_name: nginx 
@@ -16,13 +17,14 @@ services:
       - inception
     restart: always
 
+#----------------------------------------------------------
+
   wordpress:
     container_name: wordpress
     build:
       context: ./requirements/wordpress
     depends_on:
       - mariadb
-      - elasticsearch
     volumes:
       - wp-files:/var/www/wordpress
     networks:
@@ -42,6 +44,8 @@ services:
       WP_REDIS_SCHEME: ${WP_REDIS_SCHEME}
       WP_ELASTICSEARCH_HOST: ${WP_ELASTICSEARCH_HOST}
     restart: always
+
+#----------------------------------------------------------
   
   mariadb:
     container_name: mariadb
@@ -57,6 +61,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     restart: always
 
+#----------------------------------------------------------
+
   redis:
     container_name: redis
     build:
@@ -66,7 +72,9 @@ services:
     networks:
       - inception
     restart: always
-  
+
+#----------------------------------------------------------
+
   ftp:
     container_name: ftp
     build:
@@ -87,6 +95,8 @@ services:
       FTP_PASSWORD: ${FTP_PASSWORD}
     restart: always
 
+#----------------------------------------------------------
+
   static_website:
     container_name: static_website
     build:
@@ -99,11 +109,15 @@ services:
     networks:
       - inception
     restart: no
-  
+
+#----------------------------------------------------------
+
   adminer:
     container_name: adminer
     build:
       context: ./requirements/bonus/adminer
+    volumes:
+      - certs:/etc/nginx/certs
     depends_on:
       - mariadb
     ports:
@@ -112,26 +126,27 @@ services:
       - inception
     restart: always
 
-  elasticsearch:
-    container_name: elasticsearch
+#----------------------------------------------------------
+
+  whoami:
+    container_name: whoami
     build:
-      context: ./requirements/bonus/elasticsearch
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - xpack.security.transport.ssl.enabled=false
-      - xpack.security.http.ssl.enabled=false
+      context: ./requirements/bonus/whoami
+    volumes:
+      - certs:/etc/nginx/certs
     ports:
-      - 9200:9200
+      - "8081:8081"
     networks:
       - inception
     restart: always
 
+#----------------------------------------------------------
 
 networks:
   inception:
     name: inception
     driver: bridge
+
 
 volumes:
 

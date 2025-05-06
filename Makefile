@@ -16,7 +16,7 @@ all:
 	/home/ctommasi/data/wp-files \
 	/home/ctommasi/data/certs \
 	/home/ctommasi/data/html-files \
-	&& echo "127.0.0.1 ctommasi.42.fr static.ctommasi.42.fr adminer.ctommasi.42.fr" > /etc/hosts \
+	&& echo "127.0.0.1 ctommasi.42.fr static.ctommasi.42.fr adminer.ctommasi.42.fr whoami.ctommasi.42.fr" > /etc/hosts \
 	&& cd srcs && docker-compose up -d --build
 
 attached:
@@ -25,7 +25,7 @@ attached:
 	/home/ctommasi/data/wp-files \
 	/home/ctommasi/data/certs \
 	/home/ctommasi/data/html-files \
-	&& echo "127.0.0.1 ctommasi.42.fr static.ctommasi.42.fr adminer.ctommasi.42.fr" > /etc/hosts \
+	&& echo "127.0.0.1 ctommasi.42.fr static.ctommasi.42.fr adminer.ctommasi.42.fr whoami.ctommasi.42.fr" > /etc/hosts \
 	&& cd srcs && docker-compose up --build
 
 clean:
